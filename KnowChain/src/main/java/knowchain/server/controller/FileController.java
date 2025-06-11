@@ -6,10 +6,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 
+@Slf4j
 @RestController
 @RequestMapping("/file")
 public class FileController {
@@ -18,6 +23,8 @@ public class FileController {
     @GetMapping("/getAll/{userID}")
     public Result<List<FileAndDirItem>> getFileAndDirList(@PathVariable String userID){
 
+        /* TODO */
+
         // 测试
         List<FileAndDirItem> test = new ArrayList<>();
         test.add(new FileAndDirItem(0,"测试","/",false));
@@ -25,4 +32,104 @@ public class FileController {
         return Result.success(test);
     }
 
+    // 根据URL获取文件数据流
+    @GetMapping("/getFileStream/{URL}")
+    public Result<InputStream> getFileStream(@PathVariable String URL){
+        try {
+            URL fileUrl = new URL(URL);
+
+            // 打开连接并获取输入流
+            InputStream inputStream = fileUrl.openStream();
+
+            // 成功返回文件数据流
+            return Result.success(inputStream);
+        } catch (Exception e) {
+            // 失败返回异常信息
+            return Result.error("无法获取文件数据流:" + e.getMessage());
+        }
+    }
+
+    // 新建文件夹
+    @PostMapping("/addDir")
+    public Result addDirectory(
+            @RequestParam("parentFID") Long parentFID,
+            @RequestParam("originalName") String name
+    ){
+        try {
+
+            /* TODO */
+
+            return Result.success();
+        } catch (Exception e) {
+            return Result.error("新建文件夹失败");
+        }
+    }
+
+    // 文件夹重命名
+    @PutMapping("/renameFileOrDir")
+    public Result renameFileOrDirectory(
+            @RequestParam("fid") Long fid,
+            @RequestParam("fName") String fName,
+            @RequestParam("isDir") boolean isDir
+    ){
+        try {
+
+            /* TODO */
+
+            return Result.success();
+        } catch (Exception e) {
+            return Result.error("重命名失败");
+        }
+    }
+
+    // 上传文件(支持的格式:.ppt .pptx .pdf格式文件)
+    @PostMapping("/uploadFile")
+    public Result<String> uploadFile(@RequestParam("file") MultipartFile file){
+        // 文件名
+        String originalFIleName = file.getOriginalFilename();
+        // 文件大小
+        Long size = file.getSize();
+        // 保存文件
+        try{
+
+            /* TODO */
+
+            return Result.success(String.format("文件 %s 上传成功!", originalFIleName));
+        } catch (Exception e){
+            return Result.error(String.format("文件 %s 上传失败!", originalFIleName));
+        }
+    }
+
+    // 修改文件或文件夹位置
+    @PutMapping("/changeFileOrDirPosition")
+    public Result changeFileOrDirectoryPosition(
+            @RequestParam("fid") Long fid,
+            @RequestParam("parentFID") Long parentFID,
+            @RequestParam("isDir") boolean isDir
+    ){
+        try{
+
+            /* TODO */
+
+            return Result.success();
+        } catch (Exception e){
+            return Result.error("移动文件或文件夹失败");
+        }
+    }
+
+    // 删除文件/文件夹
+    @DeleteMapping("/deleteFileOrDir/{fid}")
+    public Result deleteFileOrDirectory(
+            @RequestParam("fid") Long fid,
+            @RequestParam("isDir") boolean isDir
+    ){
+        try{
+
+            /* TODO */
+
+            return Result.success();
+        } catch (Exception e){
+            return Result.error("删除文件或文件夹失败");
+        }
+    }
 }
